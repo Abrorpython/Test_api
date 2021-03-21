@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Article
+from .models import Article,Author
 
 class ArticleSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=120)
@@ -14,5 +14,15 @@ class ArticleSerializer(serializers.Serializer):
         instance.body = validated_data.get('body',instance.body)
         instance.author_id = validated_data.get('author_id',instance.author_id)
         instance.save()
-
         return instance
+
+class AuthorSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=100)
+    email=serializers.EmailField()
+
+    def create(self, validated_data):
+        return Author.objects.create(**validated_data)
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name',instance.name)
+        instance.email = validated_data.get('email',instance.email)
